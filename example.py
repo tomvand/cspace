@@ -1,4 +1,5 @@
 from cspace import CSpace
+# from cspace import CSpaceCached as CSpace
 
 import time
 import numpy as np
