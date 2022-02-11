@@ -67,16 +67,16 @@ class CSpace(object):
         # Row-wise expansion
         for y in range(self.image_shape[0]):
             for x in range(self.image_shape[1]):
-                d = image[y][x]
+                d = image[y, x]
                 x1, x2 = self.lut_horizontal[x][d]
                 for x_write in range(x1, x2 + 1):
-                    image_temp[y][x_write] = max(image_temp[y][x_write], d)
+                    image_temp[y, x_write] = max(image_temp[y, x_write], d)
         # Column-wise expansion
         for x in range(self.image_shape[1]):
             for y in range(self.image_shape[0]):
-                d = image_temp[y][x]
+                d = image_temp[y, x]
                 y1, y2 = self.lut_vertical[y][d]
                 dnew = self.lut_disparity[d]
                 for y_write in range(y1, y2 + 1):
-                    image_out[y_write][x] = max(image_out[y_write][x], dnew)
+                    image_out[y_write, x] = max(image_out[y_write, x], dnew)
         return image_out

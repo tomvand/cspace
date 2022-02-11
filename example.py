@@ -1,5 +1,6 @@
 from cspace import CSpace
 # from cspace import CSpaceCached as CSpace
+from cspace import FastArray
 
 import time
 import numpy as np
@@ -22,7 +23,13 @@ def main():
         load_image('120.png')
     ]
     shape = imgs[0].shape
-    # imgs = [i.tolist() for i in imgs]  # test if this is faster?
+
+    # for i, img in enumerate(imgs):
+    #     a = FastArray(shape)
+    #     for x in range(shape[1]):
+    #         for y in range(shape[0]):
+    #             a[y, x] = img[y, x]
+    #     imgs[i] = a
 
     # Create C-Space filter
     c = CSpace(shape, 512, 0.20, 150, 0.1)
