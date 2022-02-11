@@ -22,6 +22,11 @@ def main():
         load_image('114.png'),
         load_image('120.png')
     ]
+
+    downsample_factor = 3
+    for i, img in enumerate(imgs):
+        imgs[i] = (img[0:-1:downsample_factor, 0:-1:downsample_factor] / downsample_factor).astype(int)
+
     shape = imgs[0].shape
 
     # for i, img in enumerate(imgs):
@@ -32,7 +37,11 @@ def main():
     #     imgs[i] = a
 
     # Create C-Space filter
-    c = CSpace(shape, 512, 0.20, 150, 0.1)
+    disparities = 128
+    baseline = 0.50
+    focal_length = np.sqrt(shape[0]**2 + shape[1]**2)
+    radius = 0.2
+    c = CSpace(shape, disparities, baseline, focal_length, radius)
 
     imgs_out = []
     for i in range(len(imgs)):
@@ -40,7 +49,7 @@ def main():
         img_expanded = c.filter(imgs[i])
         tend = time.perf_counter()
         print(f'Time: {tend - tstart}')
-        imgs_out.append(c.filter(imgs[i]))
+        imgs_out.append(img_expanded)
 
     # Comparison: test numpy read/write speed
     img_test = imgs[0].copy()
@@ -55,9 +64,9 @@ def main():
     plt.figure()
     for i in range(len(imgs)):
         plt.subplot(len(imgs), 2, 1 + 2 * i)
-        plt.imshow(imgs[i], vmin=0, vmax=100)
+        plt.imshow(imgs[i], vmin=0, vmax=100 / downsample_factor)
         plt.subplot(len(imgs), 2, 2 + 2 * i)
-        plt.imshow(imgs_out[i], vmin=0, vmax=100)
+        plt.imshow(imgs_out[i], vmin=0, vmax=100 / downsample_factor)
     plt.show()
 
 
